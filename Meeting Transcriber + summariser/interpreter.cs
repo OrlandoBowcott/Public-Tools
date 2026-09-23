@@ -53,6 +53,17 @@ namespace Meeting_Transcriber___summariser
             }
 
             Console.WriteLine("\rTranscribing: 100%   Done.");
+
+            string transcriptPath = Path.ChangeExtension(wavPath, ".txt");
+            using (var writer = new StreamWriter(transcriptPath))
+            {
+                foreach (var segment in segments)
+                {
+                    writer.WriteLine($"[{segment.Start:hh\\:mm\\:ss} - {segment.End:hh\\:mm\\:ss}] {segment.Text}");
+                }
+            }
+            Console.WriteLine($"Transcript saved to: {transcriptPath}");
+
             return segments;
         }
     }
