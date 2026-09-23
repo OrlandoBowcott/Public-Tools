@@ -7,16 +7,18 @@ namespace Meeting_Transcriber_summariser
 {
     internal class Audio
     {
-        private string SourcePath;
-        private string extractedWAVPath;
-        private string Name;
+        public readonly string _sourcePath;
+        public readonly string _name;
+        public readonly string _extractedWavPath;
 
 
         public Audio(string sourcePath)
         {
-            SourcePath = sourcePath;
-            Name = Path.GetFileName(sourcePath);
-            extractedWAVPath = Path.Combine($"{Path.GetDirectoryName(sourcePath)}", $"{Path.GetFileNameWithoutExtension(sourcePath)}", "processed.wav");
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException("Source media file not found.", sourcePath);
+            _sourcePath = sourcePath;
+            _name = Path.GetFileNameWithoutExtension(sourcePath);
+            _extractedWavPath = Path.Combine($"{Path.GetDirectoryName(sourcePath)}", $"{Path.GetFileNameWithoutExtension(sourcePath)}", "processed.wav");
         }
 
         public void ExtractWAV()
@@ -26,7 +28,7 @@ namespace Meeting_Transcriber_summariser
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "ffmpeg",
-                    Arguments = $"-i \"{SourcePath}\" -vn -ac 1 -ar 16000 " + $"-c:a pcm_s16le \"{extractedWAVPath}\"",
+                    Arguments = $"-y -i \"{_sourcePath}\" -vn -ac 1 -ar 16000 " + $"-c:a pcm_s16le \"{_extractedWavPath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -34,13 +36,22 @@ namespace Meeting_Transcriber_summariser
                 }
             };
             ffmpegProcess.Start();
+
+            string standardOutput = ffmpegProcess.StandardOutput.ReadToEnd();
+            string standardError = ffmpegProcess.StandardError.ReadToEnd();
+
             ffmpegProcess.WaitForExit();
+
+
             if (ffmpegProcess.ExitCode != 0)
             {
-                string errorMessage = ffmpegProcess.StandardError.ReadToEnd();
-                throw new Exception($"FFmpeg failed with exit code {ffmpegProcess.ExitCode}: {errorMessage}");
+                throw new Exception(
+                    $"FFmpeg failed with exit code {ffmpegProcess.ExitCode}.{Environment.NewLine}" +
+                    $"Error: {standardError}{Environment.NewLine}" +
+                    $"Output: {standardOutput}");
             }
-            File.WriteAllBytes(extractedWAVPath, File.ReadAllBytes(extractedWAVPath));
         }
+
+
     }
 }
