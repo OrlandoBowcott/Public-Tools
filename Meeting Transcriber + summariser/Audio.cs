@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
-namespace Meeting_Transcriber_summariser
+namespace Meeting_Transcriber___summariser
 {
     internal class Audio
     {
