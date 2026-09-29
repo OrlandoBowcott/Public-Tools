@@ -13,7 +13,7 @@ namespace Meeting_Transcriber___summariser
             Audio audioData = new Audio(audioFilePath);
             audioData.ExtractWAV();
 
-            Transcriber transcriber = new Transcriber("ggml-smallEn.bin", GgmlType.SmallEn);
+            Transcriber transcriber = new Transcriber("ggml-LargeV3.bin", GgmlType.LargeV3);
             List<TranscriptSegment> segments = await transcriber.TranscribeAsync(audioData._extractedWavPath);
 
             foreach (var segment in segments)

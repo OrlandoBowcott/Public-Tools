@@ -19,7 +19,7 @@ namespace Meeting_Transcriber___summariser
             string Text
         );
 
-        public Transcriber(string modelPath, GgmlType modelType = GgmlType.SmallEn)
+        public Transcriber(string modelPath, GgmlType modelType = GgmlType.LargeV3)
         {
             _modelPath = modelPath;
             _modelType = modelType;
