@@ -1,4 +1,8 @@
 ﻿using Whisper.net.Ggml;
+using Whisper.net;
+using Whisper.net.LibraryLoader;
+
+
 
 
 namespace Meeting_Transcriber___summariser
@@ -9,6 +13,11 @@ namespace Meeting_Transcriber___summariser
         {
             Console.WriteLine("please paste the exact file path of the audio file you want to transcribe and summarise: ");
             string audioFilePath = Console.ReadLine();
+            RuntimeOptions.RuntimeLibraryOrder =
+            [
+                RuntimeLibrary.Cuda12,
+                RuntimeLibrary.Cpu
+            ];
 
             Audio audioData = new Audio(audioFilePath);
             audioData.ExtractWAV();

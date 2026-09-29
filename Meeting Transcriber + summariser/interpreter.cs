@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Whisper.net;
 using Whisper.net.Ggml;
+using Whisper.net.LibraryLoader;
+
 
 namespace Meeting_Transcriber___summariser
 {
